@@ -44,6 +44,14 @@ func NewUrlHandler(u string, log *logrus.Logger) *UrlHandler {
 	}
 }
 
+func (u *UrlHandler) GetUrl() string {
+	return u.url
+}
+
+func (u *UrlHandler) GetData() []byte {
+	return u.data
+}
+
 func (u *UrlHandler) Download(wg *sync.WaitGroup, semaphore chan struct{}, output chan *UrlHandler) {
 	start := time.Now()
 	defer wg.Done()
@@ -67,12 +75,4 @@ func (u *UrlHandler) Download(wg *sync.WaitGroup, semaphore chan struct{}, outpu
 	u.data = b
 	output <- u
 	u.logger.Debugf("stats : time taken to process url %v is %v  ", u.url, time.Since(start))
-}
-
-func (u *UrlHandler) GetUrl() string {
-	return u.url
-}
-
-func (u *UrlHandler) GetData() []byte {
-	return u.data
 }
