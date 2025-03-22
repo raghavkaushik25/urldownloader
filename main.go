@@ -23,6 +23,7 @@ func main() {
 	if *path == "" {
 		logger.Fatal("path to the csv must be provided")
 	}
+	urlhandler.NewStats()
 	fh := filehandler.NewFileHandler(*path, "/output")
 	wg := &sync.WaitGroup{}
 	downloadWg := &sync.WaitGroup{}

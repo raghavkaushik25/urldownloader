@@ -42,6 +42,7 @@ func TestFlow(t *testing.T) {
 	type result struct {
 		resp []byte
 	}
+	urlhandler.NewStats()
 	testCases := make(map[string]*result)
 	urls := [][]string{
 		{"Header"},
@@ -66,7 +67,7 @@ func TestFlow(t *testing.T) {
 		testCases[url] = r
 	}
 	tempFile := createTempCSVFile(t, urls)
-
+	defer os.Remove(tempFile)
 	sema := make(chan struct{}, 2)
 	output := make(chan *urlhandler.UrlHandler, 1)
 	fh := filehandler.NewFileHandler(tempFile, "")
@@ -83,6 +84,4 @@ func TestFlow(t *testing.T) {
 	}
 	wg.Wait()
 	close(sema)
-	err := os.Remove(tempFile)
-	assert.NoError(t, err)
 }

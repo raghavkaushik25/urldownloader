@@ -51,11 +51,11 @@ func (fh *fileHanlder) ReadCsv(wg *sync.WaitGroup, downloadWg *sync.WaitGroup, s
 	for {
 		record, err := r.Read()
 		if err == io.EOF {
-			fmt.Printf("reached EOF\n")
+			fh.logger.Errorf("reached EOF\n")
 			break
 		}
 		if err != nil {
-			fmt.Printf("error %v reading the record %v", err, record)
+			fh.logger.Errorf("error %v reading the record %v", err, record)
 			continue
 		}
 		url := record[0]
