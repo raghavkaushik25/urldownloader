@@ -86,5 +86,4 @@ func (fh *fileHanlder) WriteData(wg *sync.WaitGroup, output chan *urlhandler.Url
 			continue
 		}
 	}
-	fh.logger.Info("I am here")
 }
