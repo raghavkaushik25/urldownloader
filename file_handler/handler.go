@@ -92,7 +92,7 @@ func (fh *fileHanlder) WriteData(wg *sync.WaitGroup, output chan *urlhandler.Url
 		} else {
 			fPrefix = url.Host
 		}
-		f, err := os.Create(fmt.Sprintf("/Users/raghav/go/src/url_downloader/output/%v_%v.txt", fPrefix, time.Now().String()))
+		f, err := os.Create(fmt.Sprintf(fh.destinationPath+"/%v_%v.txt", fPrefix, time.Now().String()))
 		defer f.Close()
 		if err != nil {
 			fh.logger.Errorf("%v while creating file for url %v", err, u.GetUrl())
