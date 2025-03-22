@@ -19,14 +19,20 @@ type FileHandler interface {
 }
 
 type fileHanlder struct {
-	logger *logrus.Logger
-	path   string
+	logger          *logrus.Logger
+	path            string
+	destinationPath string
 }
 
 func NewFileHandler(p string) FileHandler {
+	wd, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
 	return &fileHanlder{
-		path:   p,
-		logger: logrus.New(),
+		path:            p,
+		logger:          logrus.New(),
+		destinationPath: wd + "/output",
 	}
 }
 
@@ -65,6 +71,18 @@ func (fh *fileHanlder) ReadCsv(wg *sync.WaitGroup, downloadWg *sync.WaitGroup, s
 
 func (fh *fileHanlder) WriteData(wg *sync.WaitGroup, output chan *urlhandler.UrlHandler) {
 	defer wg.Done()
+	_, err := os.Stat(fh.destinationPath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			err = os.Mkdir(fh.destinationPath, 0777)
+			if err != nil {
+				panic(err)
+			}
+		} else {
+			panic(err)
+		}
+	}
+
 	for u := range output {
 		fPrefix := ""
 		fh.logger.Infof("writing file for url %v", u.GetUrl())
