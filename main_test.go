@@ -14,10 +14,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func getwd() string {
+	wd, _ := os.Getwd()
+	return wd
+}
+
 // createTempCSVFile creates a temporary CSV file for testing.
 func createTempCSVFile(t *testing.T, urls [][]string) string {
 
-	tmpFile, err := os.CreateTemp("/Users/raghav/go/src/url_downloader", "url_list.csv")
+	tmpFile, err := os.CreateTemp(getwd(), "url_list.csv")
 	if err != nil {
 		t.Fatalf("failed to create test file: %v", err)
 	}
@@ -61,9 +66,10 @@ func TestFlow(t *testing.T) {
 		testCases[url] = r
 	}
 	tempFile := createTempCSVFile(t, urls)
+
 	sema := make(chan struct{}, 2)
 	output := make(chan *urlhandler.UrlHandler, 1)
-	fh := filehandler.NewFileHandler(tempFile)
+	fh := filehandler.NewFileHandler(tempFile, "")
 	wg := &sync.WaitGroup{}
 	dwg := &sync.WaitGroup{}
 	wg.Add(1)
@@ -77,4 +83,6 @@ func TestFlow(t *testing.T) {
 	}
 	wg.Wait()
 	close(sema)
+	err := os.Remove(tempFile)
+	assert.NoError(t, err)
 }

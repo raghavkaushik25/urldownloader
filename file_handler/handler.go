@@ -24,7 +24,7 @@ type fileHanlder struct {
 	destinationPath string
 }
 
-func NewFileHandler(p string) FileHandler {
+func NewFileHandler(p string, folder string) FileHandler {
 	wd, err := os.Getwd()
 	if err != nil {
 		panic(err)
@@ -32,7 +32,7 @@ func NewFileHandler(p string) FileHandler {
 	return &fileHanlder{
 		path:            p,
 		logger:          logrus.New(),
-		destinationPath: wd + "/output",
+		destinationPath: wd + "/" + folder,
 	}
 }
 
