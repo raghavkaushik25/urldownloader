@@ -12,8 +12,8 @@ This project is a concurrent URL downloader written in Go. It follows a three-st
 - As soon as a new URL is read from the csv. It starts a new go routine to download its contents. 
 
 ### Stage 2 - Download Contents  
-- Uses semaphore channel buffered to maxNumOfGoroutines to limit the Goroutines.
-- As soon as the number "Download" gorouritnes reach 50, it will stop spawning more and wait for the existing one to return.
+- Uses buffered semaphore channel to limit maximum goroutines to maxGoroutines (set to 50).
+- As soon as the number of "Download" gorouritnes reach 50, it will stop spawning more and wait for the existing one to return.
 - It will only start max 50 concurrent goroutines. 
 
 ### Stage 3 - Persist Contents  
@@ -25,11 +25,8 @@ This project is a concurrent URL downloader written in Go. It follows a three-st
 ## Architecture
 
 - Uses a robust logging mechanism to ensure suffiecient DEBUG logs if in case debugging is required. 
-
 - Ensure that program shuts down gracefully if in case it receives a os.Interupt from the system.
-
 - Uses locks to maintain the stats.
-
 
 ## How to run  
 
