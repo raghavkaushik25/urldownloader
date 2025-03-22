@@ -24,6 +24,7 @@ func NewUrlHandler(u string, log *logrus.Logger) *UrlHandler {
 
 func (u *UrlHandler) Download(wg *sync.WaitGroup, semaphore chan struct{}, output chan *UrlHandler) {
 	defer wg.Done()
+	defer func() { <-semaphore }()
 	u.logger.Infof("processing: %v", u.url)
 	res, err := http.Get(u.url)
 	if err != nil {
@@ -36,7 +37,6 @@ func (u *UrlHandler) Download(wg *sync.WaitGroup, semaphore chan struct{}, outpu
 		return
 	}
 	u.data = b
-	<-semaphore
 	output <- u
 
 }

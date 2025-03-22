@@ -61,7 +61,7 @@ func TestFlow(t *testing.T) {
 		testCases[url] = r
 	}
 	tempFile := createTempCSVFile(t, urls)
-	sema := make(chan struct{}, 3)
+	sema := make(chan struct{}, 2)
 	output := make(chan *urlhandler.UrlHandler, 1)
 	fh := filehandler.NewFileHandler(tempFile)
 	wg := &sync.WaitGroup{}
