@@ -11,6 +11,7 @@ import (
 	filehandler "url-downloader/file_handler"
 	urlhandler "url-downloader/url_handler"
 
+	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -39,6 +40,7 @@ func createTempCSVFile(t *testing.T, urls [][]string) string {
 
 func TestFlow(t *testing.T) {
 	//Create Temp CSV file
+	logger := logrus.New()
 	type result struct {
 		resp []byte
 	}
@@ -70,7 +72,7 @@ func TestFlow(t *testing.T) {
 	defer os.Remove(tempFile)
 	sema := make(chan struct{}, 2)
 	output := make(chan *urlhandler.UrlHandler, 1)
-	fh := filehandler.NewFileHandler(tempFile, "")
+	fh := filehandler.NewFileHandler(tempFile, "", logger)
 	wg := &sync.WaitGroup{}
 	dwg := &sync.WaitGroup{}
 	wg.Add(1)

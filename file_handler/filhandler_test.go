@@ -25,7 +25,7 @@ func TestWriteDate(t *testing.T) {
 		// invalid url; but file should be created.
 		"c",
 	}
-	fh := NewFileHandler("", "test_output")
+	fh := NewFileHandler("", "test_output", logger)
 	wg.Add(1)
 	go fh.WriteData(wg, output)
 	for _, url := range urls {

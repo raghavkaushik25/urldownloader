@@ -49,7 +49,7 @@ func (u *UrlHandler) Download(wg *sync.WaitGroup, semaphore chan struct{}, outpu
 	defer wg.Done()
 	defer func() { <-semaphore }()
 	atomic.AddInt32(&st.urlsProcessed, 1)
-	u.logger.Infof("processing: %v", u.url)
+	u.logger.Debugf("processing: %v", u.url)
 	res, err := http.Get(u.url)
 	if err != nil {
 		atomic.AddInt32(&st.urlsFailed, 1)
@@ -66,7 +66,7 @@ func (u *UrlHandler) Download(wg *sync.WaitGroup, semaphore chan struct{}, outpu
 	atomic.AddInt32(&st.urlsSucceded, 1)
 	u.data = b
 	output <- u
-	u.logger.Infof("stats : time taken to process url %v is %v  ", u.url, time.Since(start))
+	u.logger.Debugf("stats : time taken to process url %v is %v  ", u.url, time.Since(start))
 }
 
 func (u *UrlHandler) GetUrl() string {

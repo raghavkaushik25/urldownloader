@@ -24,14 +24,14 @@ type fileHanlder struct {
 	destinationPath string
 }
 
-func NewFileHandler(p string, folder string) FileHandler {
+func NewFileHandler(p string, folder string, log *logrus.Logger) FileHandler {
 	wd, err := os.Getwd()
 	if err != nil {
 		panic(err)
 	}
 	return &fileHanlder{
 		path:            p,
-		logger:          logrus.New(),
+		logger:          log,
 		destinationPath: wd + "/" + folder,
 	}
 }
@@ -51,7 +51,7 @@ func (fh *fileHanlder) ReadCsv(wg *sync.WaitGroup, downloadWg *sync.WaitGroup, s
 	for {
 		record, err := r.Read()
 		if err == io.EOF {
-			fh.logger.Errorf("reached EOF\n")
+			fh.logger.Infof("read complete; reached EOF\n")
 			break
 		}
 		if err != nil {
@@ -59,7 +59,7 @@ func (fh *fileHanlder) ReadCsv(wg *sync.WaitGroup, downloadWg *sync.WaitGroup, s
 			continue
 		}
 		url := record[0]
-		fh.logger.Infof("got new url %v ", url)
+		fh.logger.Debugf("got new url %v ", url)
 		u := urlhandler.NewUrlHandler(url, fh.logger)
 		downloadWg.Add(1)
 		sema <- struct{}{}
@@ -87,7 +87,7 @@ func (fh *fileHanlder) WriteData(wg *sync.WaitGroup, output chan *urlhandler.Url
 
 	for u := range output {
 		fPrefix := ""
-		fh.logger.Infof("writing file for url %v", u.GetUrl())
+		fh.logger.Debugf("writing file for url %v", u.GetUrl())
 		url, err := url.Parse(u.GetUrl())
 		if err != nil {
 			fPrefix = "dummy"

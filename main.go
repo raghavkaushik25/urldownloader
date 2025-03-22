@@ -17,14 +17,18 @@ var (
 )
 
 func main() {
-
-	path := flag.String("path", "", "-path=/path/to/csv")
+	logger := logrus.New()
+	path := flag.String("path", "", "Path of the csv; -path=/path/to/csv")
+	debug := flag.Bool("debug", false, "Run application in debug mode; -debug")
 	flag.Parse()
 	if *path == "" {
 		logger.Fatal("path to the csv must be provided")
 	}
+	if *debug {
+		logger.SetLevel(logrus.DebugLevel)
+	}
 	urlhandler.NewStats()
-	fh := filehandler.NewFileHandler(*path, "/output")
+	fh := filehandler.NewFileHandler(*path, "/output", logger)
 	wg := &sync.WaitGroup{}
 	downloadWg := &sync.WaitGroup{}
 	wg.Add(1)
