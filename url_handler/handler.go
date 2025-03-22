@@ -20,12 +20,15 @@ type UrlHandler struct {
 	logger *logrus.Logger
 }
 
+// stats class to maintain over all stats. It is not inherently thread safe thats why we need
+// atomic/sync.Mutex to access these stats.
 type stats struct {
 	urlsProcessed int32
 	urlsFailed    int32
 	urlsSucceded  int32
 }
 
+// Singleton stats object.
 func NewStats() {
 	once.Do(func() {
 		st = &stats{}
@@ -55,6 +58,7 @@ func (u *UrlHandler) GetData() []byte {
 func (u *UrlHandler) Download(wg *sync.WaitGroup, semaphore chan struct{}, output chan *UrlHandler) {
 	start := time.Now()
 	defer wg.Done()
+	// defer the consumption of semaphore in case there is an erro condition.
 	defer func() { <-semaphore }()
 	atomic.AddInt32(&st.urlsProcessed, 1)
 	u.logger.Debugf("processing: %v", u.url)

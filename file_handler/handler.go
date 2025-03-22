@@ -13,6 +13,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// File handler interface to manage Read and Write behaviour.
 type FileHandler interface {
 	ReadCsv(wg *sync.WaitGroup, downloadWg *sync.WaitGroup, sema chan struct{}, output chan *urlhandler.UrlHandler)
 	WriteData(wg *sync.WaitGroup, output chan *urlhandler.UrlHandler)
