@@ -67,6 +67,8 @@ func (fh *fileHanlder) ReadCsv(wg *sync.WaitGroup, downloadWg *sync.WaitGroup, s
 	}
 	downloadWg.Wait()
 	close(output)
+	p, s, failed := urlhandler.GetStats()
+	fh.logger.Infof("final stas : processed %v , failed %v, success %v", p, failed, s)
 }
 
 func (fh *fileHanlder) WriteData(wg *sync.WaitGroup, output chan *urlhandler.UrlHandler) {

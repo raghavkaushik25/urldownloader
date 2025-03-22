@@ -9,6 +9,7 @@ import (
 )
 
 func TestUrlHandler(t *testing.T) {
+	NewStats()
 	wg := &sync.WaitGroup{}
 	consumerWg := &sync.WaitGroup{}
 	sema := make(chan struct{}, 1)
